@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сколько стоит твоё выгорание?</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --dark: #111111;
+    --card: #181818;
+    --border: #2a2a2a;
+    --red: #e63946;
+    --red-dim: #7a1a20;
+    --orange: #f4a261;
+    --white: #f5f5f0;
+    --muted: #888;
+    --green: #2a9d5c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Manrope', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .header {
+    margin-bottom: 48px;
+    border-left: 3px solid var(--red);
+    padding-left: 20px;
+  }
+
+  .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 8vw, 64px);
+    line-height: 0.95;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  h1 span {
+    color: var(--red);
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 400;
+    max-width: 480px;
+  }
+
+  /* PROGRESS */
+  .progress-bar {
+    height: 2px;
+    background: var(--border);
+    margin-bottom: 40px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--red);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 2px;
+  }
+
+  .step-indicator {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 32px;
+    margin-bottom: 16px;
+    animation: slideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-number {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .question-text {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    color: var(--white);
+  }
+
+  .question-hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  /* INPUT STYLES */
+  .input-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .input-wrapper {
+    flex: 1;
+    position: relative;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    background: var(--black);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 14px 16px;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    font-family: 'Manrope', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+  input[type="number"]:focus {
+    border-color: var(--red);
+  }
+
+  .input-unit {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 80px;
+  }
+
+  /* SLIDER */
+  .slider-container {
+    margin-top: 8px;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 3px;
+    background: var(--border);
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--red);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
+
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .slider-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--orange);
+    margin-bottom: 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+  }
+
+  /* OPTIONS */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .option-btn {
+    background: var(--black);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 14px 16px;
+    color: var(--white);
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    line-height: 1.4;
+  }
+
+  .option-btn:hover {
+    border-color: var(--red);
+    background: rgba(230, 57, 70, 0.06);
+  }
+
+  .option-btn.selected {
+    border-color: var(--red);
+    background: rgba(230, 57, 70, 0.12);
+    color: var(--white);
+  }
+
+  .option-btn .opt-value {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-weight: 400;
+  }
+
+  /* NEXT BUTTON */
+  .btn-next {
+    width: 100%;
+    background: var(--red);
+    border: none;
+    border-radius: 3px;
+    padding: 16px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .btn-next:hover {
+    background: #c1121f;
+    transform: translateY(-1px);
+  }
+
+  .btn-next:disabled {
+    background: var(--border);
+    color: var(--muted);
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* LIVE PREVIEW */
+  .live-preview {
+    background: rgba(230, 57, 70, 0.06);
+    border: 1px solid var(--red-dim);
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .live-preview.visible { display: block; }
+
+  .live-preview-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .live-preview-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--red);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+
+  .live-preview-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* RESULTS */
+  .results {
+    display: none;
+    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .results.visible { display: block; }
+
+  .results-header {
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .results-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 6vw, 52px);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .results-sub {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .metric-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .metric-card.danger::before { background: var(--red); }
+  .metric-card.warning::before { background: var(--orange); }
+  .metric-card.info::before { background: #457b9d; }
+
+  .metric-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .metric-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+
+  .metric-card.danger .metric-value { color: var(--red); }
+  .metric-card.warning .metric-value { color: var(--orange); }
+  .metric-card.info .metric-value { color: #a8dadc; }
+
+  .metric-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  .big-number-card {
+    background: var(--card);
+    border: 1px solid var(--red);
+    border-radius: 4px;
+    padding: 32px;
+    text-align: center;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .big-number-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(230,57,70,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .big-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .big-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 12vw, 96px);
+    line-height: 1;
+    color: var(--red);
+    letter-spacing: 2px;
+    display: block;
+  }
+
+  .big-period {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* BREAKDOWN */
+  .breakdown {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 12px;
+  }
+
+  .breakdown-title {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 16px;
+  }
+
+  .breakdown-item:last-child { border-bottom: none; }
+
+  .breakdown-name {
+    font-size: 13px;
+    color: var(--white);
+    font-weight: 500;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .breakdown-name small {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  .breakdown-cost {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--red);
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  /* VERDICT */
+  .verdict-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--orange);
+  }
+
+  .verdict-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    color: var(--orange);
+  }
+
+  .verdict-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #ccc;
+  }
+
+  .verdict-text strong {
+    color: var(--white);
+  }
+
+  /* CTA */
+  .cta-card {
+    background: var(--red);
+    border-radius: 4px;
+    padding: 32px;
+    text-align: center;
+    margin-top: 24px;
+  }
+
+  .cta-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .cta-text {
+    font-size: 13px;
+    opacity: 0.85;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .btn-cta {
+    background: var(--white);
+    color: var(--red);
+    border: none;
+    border-radius: 3px;
+    padding: 14px 32px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .restart-btn {
+    display: block;
+    margin: 16px auto 0;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 24px;
+    color: var(--muted);
+    font-family: 'Manrope', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .restart-btn:hover {
+    border-color: var(--muted);
+    color: var(--white);
+  }
+
+  /* QUIZ HIDDEN */
+  .quiz-section { display: block; }
+  .quiz-section.hidden { display: none; }
+
+  @media (max-width: 480px) {
+    .metric-grid { grid-template-columns: 1fr; }
+    .options-grid { grid-template-columns: 1fr; }
+    .question-card { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="label">Калькулятор потерь</div>
+    <h1>Сколько стоит<br>твоё <span>выгорание?</span></h1>
+    <p class="subtitle">7 вопросов. Реальные цифры. Ты увидишь, что теряешь каждый месяц — в рублях и часах.</p>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section" id="quizSection">
+    <div class="step-indicator" id="stepIndicator">Шаг 1 из 7</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:14%"></div>
+    </div>
+
+    <div class="live-preview" id="livePreview">
+      <div class="live-preview-label">Уже считаем потери</div>
+      <div class="live-preview-number" id="liveNumber">0 ₽</div>
+      <div class="live-preview-desc" id="liveDesc">в месяц уходит вникуда</div>
+    </div>
+
+    <div id="questionContainer"></div>
+
+    <button class="btn-next" id="btnNext" onclick="nextStep()">ДАЛЬШЕ →</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="resultsSection">
+    <div class="results-header">
+      <div class="label">Твой результат</div>
+      <div class="results-title" id="resultsTitle"></div>
+      <div class="results-sub">Вот во что обходится твоё состояние каждый месяц</div>
+    </div>
+
+    <div class="big-number-card">
+      <div class="big-label">Ты теряешь каждый месяц</div>
+      <span class="big-value" id="totalLoss">0 ₽</span>
+      <div class="big-period" id="yearlyLoss"></div>
+    </div>
+
+    <div class="metric-grid">
+      <div class="metric-card danger">
+        <div class="metric-label">Потери деньгами</div>
+        <div class="metric-value" id="moneyLoss">0 ₽</div>
+        <div class="metric-note">в месяц из-за низкой эффективности</div>
+      </div>
+      <div class="metric-card warning">
+        <div class="metric-label">Потери временем</div>
+        <div class="metric-value" id="timeLoss">0 ч</div>
+        <div class="metric-note">продуктивных часов сгорает впустую</div>
+      </div>
+      <div class="metric-card info">
+        <div class="metric-label">Цена 1 часа твоего времени</div>
+        <div class="metric-value" id="hourCost">0 ₽</div>
+        <div class="metric-note">по твоим данным</div>
+      </div>
+      <div class="metric-card warning">
+        <div class="metric-label">КПД сейчас</div>
+        <div class="metric-value" id="efficiency">0%</div>
+        <div class="metric-note">от твоего реального потенциала</div>
+      </div>
+    </div>
+
+    <div class="breakdown">
+      <div class="breakdown-title">Из чего складываются потери</div>
+      <div id="breakdownItems"></div>
+    </div>
+
+    <div class="verdict-card" id="verdictCard"></div>
+
+    <div class="cta-card">
+      <div class="cta-title">Эти деньги можно вернуть</div>
+      <p class="cta-text">Послушай 10-минутный эпизод «Сильные ломаются тихо» + 1 практика, которую можно применить сегодня вечером</p>
+      <button class="btn-cta">СЛУШАТЬ БЕСПЛАТНО</button>
+    </div>
+
+    <button class="restart-btn" onclick="restart()">↺ Пройти заново</button>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    id: 'revenue',
+    number: '01',
+    text: 'Какая средняя выручка твоего бизнеса в месяц?',
+    hint: 'Примерно — порядок цифры важнее точности',
+    type: 'options',
+    options: [
+      { label: 'До 300 000 ₽', value: 200000 },
+      { label: '300К — 1 млн', value: 650000 },
+      { label: '1 — 5 млн', value: 2500000 },
+      { label: '5 млн+', value: 7000000 },
+    ]
+  },
+  {
+    id: 'hours',
+    number: '02',
+    text: 'Сколько часов в неделю ты реально работаешь?',
+    hint: 'Включая вечера, выходные, "просто проверю телефон"',
+    type: 'slider',
+    min: 40, max: 100, default: 70,
+    unit: 'часов/нед',
+    labels: ['40 ч', '70 ч', '100 ч']
+  },
+  {
+    id: 'sleep',
+    number: '03',
+    text: 'Сколько часов ты в среднем спишь?',
+    hint: 'Честно — не "должен", а реально',
+    type: 'slider',
+    min: 3, max: 8, default: 5,
+    unit: 'часов/ночь',
+    labels: ['3 ч', '5–6 ч', '8 ч']
+  },
+  {
+    id: 'focus',
+    number: '04',
+    text: 'Как ты оцениваешь свой фокус и качество решений сейчас?',
+    hint: 'Сравни с собой на пике формы',
+    type: 'options',
+    options: [
+      { label: 'Работаю чётко', value: 90, opt: '~90% от пика' },
+      { label: 'Бывают туманы', value: 65, opt: '~65% от пика' },
+      { label: 'Часто в тумане', value: 45, opt: '~45% от пика' },
+      { label: 'Почти не соображаю', value: 25, opt: '~25% от пика' },
+    ]
+  },
+  {
+    id: 'mistakes',
+    number: '05',
+    text: 'Как часто ты принимаешь решения, о которых потом жалеешь?',
+    hint: 'Срывы на команду, неверные наймы, отложенные сделки',
+    type: 'options',
+    options: [
+      { label: 'Редко', value: 1 },
+      { label: '1–2 раза в месяц', value: 2 },
+      { label: 'Каждую неделю', value: 4 },
+      { label: 'Почти каждый день', value: 12 },
+    ]
+  },
+  {
+    id: 'delegate',
+    number: '06',
+    text: 'Сколько задач ты делаешь сам, потому что "некому доверить"?',
+    hint: 'Процент от твоего рабочего времени',
+    type: 'slider',
+    min: 10, max: 90, default: 60,
+    unit: '% времени',
+    labels: ['10%', '50%', '90%']
+  },
+  {
+    id: 'burnout',
+    number: '07',
+    text: 'Как долго ты уже в этом состоянии?',
+    hint: 'На износе, без нормального восстановления',
+    type: 'options',
+    options: [
+      { label: 'Несколько недель', value: 1 },
+      { label: '1–3 месяца', value: 3 },
+      { label: '3–6 месяцев', value: 6 },
+      { label: 'Больше полугода', value: 12 },
+    ]
+  }
+];
+
+let currentStep = 0;
+let answers = {};
+let selectedOption = null;
+
+function renderQuestion() {
+  const q = questions[currentStep];
+  selectedOption = null;
+
+  document.getElementById('stepIndicator').textContent = `Шаг ${currentStep + 1} из ${questions.length}`;
+  document.getElementById('progressFill').style.width = `${((currentStep + 1) / questions.length) * 100}%`;
+
+  let html = `
+    <div class="question-card">
+      <div class="question-number">Вопрос ${q.number}</div>
+      <div class="question-text">${q.text}</div>
+      <div class="question-hint">${q.hint}</div>
+  `;
+
+  if (q.type === 'options') {
+    html += `<div class="options-grid">`;
+    q.options.forEach((opt, i) => {
+      html += `
+        <button class="option-btn" onclick="selectOption(${i}, ${opt.value})">
+          ${opt.label}
+          ${opt.opt ? `<span class="opt-value">${opt.opt}</span>` : ''}
+        </button>`;
+    });
+    html += `</div>`;
+  }
+
+  if (q.type === 'slider') {
+    html += `
+      <div class="slider-value" id="sliderVal">${q.default} ${q.unit}</div>
+      <div class="slider-container">
+        <input type="range" min="${q.min}" max="${q.max}" value="${q.default}"
+          oninput="updateSlider(this.value, '${q.unit}', '${q.id}')"
+          id="sliderInput">
+        <div class="slider-labels">
+          <span>${q.labels[0]}</span><span>${q.labels[1]}</span><span>${q.labels[2]}</span>
+        </div>
+      </div>`;
+    answers[q.id] = q.default;
+    selectedOption = q.default;
+  }
+
+  html += `</div>`;
+  document.getElementById('questionContainer').innerHTML = html;
+  document.getElementById('btnNext').disabled = q.type === 'options';
+
+  updateLivePreview();
+}
+
+function selectOption(index, value) {
+  document.querySelectorAll('.option-btn').forEach((b, i) => {
+    b.classList.toggle('selected', i === index);
+  });
+  selectedOption = value;
+  answers[questions[currentStep].id] = value;
+  document.getElementById('btnNext').disabled = false;
+  updateLivePreview();
+}
+
+function updateSlider(val, unit, id) {
+  document.getElementById('sliderVal').textContent = `${val} ${unit}`;
+  answers[id] = parseInt(val);
+  selectedOption = parseInt(val);
+  updateLivePreview();
+}
+
+function updateLivePreview() {
+  if (currentStep < 1) return;
+  const preview = document.getElementById('livePreview');
+  const calc = calcLosses();
+  if (calc.total > 0) {
+    preview.classList.add('visible');
+    document.getElementById('liveNumber').textContent = formatMoney(calc.total);
+    document.getElementById('liveDesc').textContent = 'в месяц уходит вникуда';
+  }
+}
+
+function nextStep() {
+  if (selectedOption === null && questions[currentStep].type !== 'slider') return;
+  if (currentStep < questions.length - 1) {
+    currentStep++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function calcLosses() {
+  const rev = answers.revenue || 0;
+  const hours = answers.hours || 60;
+  const sleep = answers.sleep || 5;
+  const focus = answers.focus || 60;
+  const mistakes = answers.mistakes || 2;
+  const delegate = answers.delegate || 60;
+  const burnoutMonths = answers.burnout || 3;
+
+  // Hourly rate
+  const workHoursPerMonth = hours * 4.3;
+  const hourRate = rev > 0 ? rev / workHoursPerMonth : 0;
+
+  // Sleep deprivation loss (каждый час недосыпа = -15% фокуса)
+  const sleepDebt = Math.max(0, 7 - sleep);
+  const sleepEfficiencyLoss = sleepDebt * 0.12; // 12% потери на час недосыпа
+  const sleepHoursLost = workHoursPerMonth * sleepEfficiencyLoss;
+  const sleepMoneyLost = sleepHoursLost * hourRate;
+
+  // Focus/efficiency loss
+  const focusLoss = (100 - focus) / 100;
+  const focusHoursLost = workHoursPerMonth * focusLoss * 0.4;
+  const focusMoneyLost = focusHoursLost * hourRate;
+
+  // Mistake cost
+  const avgMistakeCost = rev * 0.03; // 3% выручки на ошибку
+  const mistakeMoneyLost = mistakes * avgMistakeCost;
+  const mistakeHoursLost = mistakes * 4; // 4 часа на исправление
+
+  // Delegation loss (делаешь сам то, что стоит дешевле)
+  const delegateLoss = (delegate / 100) * workHoursPerMonth * hourRate * 0.3;
+  const delegateHoursLost = (delegate / 100) * workHoursPerMonth * 0.3;
+
+  const totalMoney = Math.round(sleepMoneyLost + focusMoneyLost + mistakeMoneyLost + delegateLoss);
+  const totalHours = Math.round(sleepHoursLost + focusHoursLost + mistakeHoursLost + delegateHoursLost);
+  const total = totalMoney;
+  const efficiency = Math.max(15, Math.round(focus * (1 - sleepEfficiencyLoss) * (1 - (delegate/100)*0.2)));
+
+  return {
+    total, totalMoney, totalHours, hourRate: Math.round(hourRate),
+    efficiency,
+    sleep: Math.round(sleepMoneyLost), sleepH: Math.round(sleepHoursLost),
+    focus: Math.round(focusMoneyLost), focusH: Math.round(focusHoursLost),
+    mistakes: Math.round(mistakeMoneyLost), mistakesH: Math.round(mistakeHoursLost),
+    delegate: Math.round(delegateLoss), delegateH: Math.round(delegateHoursLost),
+    burnoutMonths
+  };
+}
+
+function formatMoney(n) {
+  if (n >= 1000000) return `${(n/1000000).toFixed(1)} млн ₽`;
+  if (n >= 1000) return `${Math.round(n/1000)} 000 ₽`;
+  return `${n} ₽`;
+}
+
+function showResults() {
+  document.getElementById('quizSection').classList.add('hidden');
+  const r = document.getElementById('resultsSection');
+  r.classList.add('visible');
+
+  const c = calcLosses();
+  const yearly = c.total * 12;
+
+  // Title
+  let title = '';
+  if (c.total < 100000) title = 'Пока терпимо.<br>Но тенденция тревожная';
+  else if (c.total < 500000) title = 'Серьёзные потери.<br>И они накапливаются';
+  else title = 'Критический уровень.<br>Это уже не усталость';
+
+  document.getElementById('resultsTitle').innerHTML = title;
+  document.getElementById('totalLoss').textContent = formatMoney(c.total);
+  document.getElementById('yearlyLoss').textContent = `${formatMoney(yearly)} в год — это твои деньги, которых ты не видишь`;
+  document.getElementById('moneyLoss').textContent = formatMoney(c.totalMoney);
+  document.getElementById('timeLoss').textContent = `${c.totalHours} ч`;
+  document.getElementById('hourCost').textContent = formatMoney(c.hourRate);
+  document.getElementById('efficiency').textContent = `${c.efficiency}%`;
+
+  // Breakdown
+  const items = [
+    { name: 'Недосыпание', sub: `${Math.round(7 - (answers.sleep||5))} ч дефицита сна ежедневно`, money: c.sleep, hours: c.sleepH },
+    { name: 'Потеря фокуса и туман в голове', sub: `${100 - (answers.focus||60)}% снижение эффективности`, money: c.focus, hours: c.focusH },
+    { name: 'Цена эмоциональных ошибок', sub: `${answers.mistakes||2} раза/мес × стоимость последствий`, money: c.mistakes, hours: c.mistakesH },
+    { name: 'Работа "не на своём уровне"', sub: `${answers.delegate||60}% времени на задачи, которые можно делегировать`, money: c.delegate, hours: c.delegateH },
+  ];
+
+  document.getElementById('breakdownItems').innerHTML = items.map(item => `
+    <div class="breakdown-item">
+      <div class="breakdown-name">
+        ${item.name}
+        <small>${item.sub}</small>
+      </div>
+      <div class="breakdown-cost">${formatMoney(item.money)}</div>
+    </div>
+  `).join('');
+
+  // Verdict
+  const months = answers.burnout || 3;
+  const totalLostAlready = c.total * months;
+  let verdict = '';
+  if (c.efficiency < 40) {
+    verdict = `<div class="verdict-title">Диагноз честно</div>
+    <p class="verdict-text">Ты работаешь на <strong>${c.efficiency}% от своего реального потенциала</strong>. Это значит, что больше половины твоих усилий уходит в никуда — не потому что ты плохо стараешься, а потому что система сломана.<br><br>
+    За последние ${months} месяцев, пока ты в этом состоянии, потери составили примерно <strong>${formatMoney(totalLostAlready)}</strong>. Это не абстракция — это реальные деньги и решения, которых не было.</p>`;
+  } else if (c.efficiency < 65) {
+    verdict = `<div class="verdict-title">Тревожная зона</div>
+    <p class="verdict-text">Ты ещё держишься, но работаешь на <strong>${c.efficiency}% мощности</strong>. Снаружи — норм. Внутри уже давно идёт износ.<br><br>
+    За ${months} месяцев потери — <strong>${formatMoney(totalLostAlready)}</strong>. Эта цифра будет расти, пока ничего не изменится в системе.</p>`;
+  } else {
+    verdict = `<div class="verdict-title">Ты держишься, но...</div>
+    <p class="verdict-text">Пока потери относительно контролируемые. Но при <strong>${c.efficiency}% эффективности</strong> и нынешнем режиме — ты движешься в сторону более тяжёлого состояния.<br><br>
+    Лучший момент остановиться — до того, как тело скажет стоп само.</p>`;
+  }
+
+  document.getElementById('verdictCard').innerHTML = verdict;
+
+  // Scroll to results
+  setTimeout(() => r.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function restart() {
+  currentStep = 0;
+  answers = {};
+  selectedOption = null;
+  document.getElementById('quizSection').classList.remove('hidden');
+  document.getElementById('resultsSection').classList.remove('visible');
+  document.getElementById('livePreview').classList.remove('visible');
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Init
+renderQuestion();
+</script>
+</body>
+</html>
