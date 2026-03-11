@@ -623,8 +623,8 @@
   <!-- HEADER -->
   <div class="header">
     <div class="label">Калькулятор потерь</div>
-    <h1>Сколько стоит<br>твоё <span>выгорание?</span></h1>
-    <p class="subtitle">7 вопросов. Реальные цифры. Ты увидишь, что теряешь каждый месяц — в рублях и часах.</p>
+    <h1>Сколько вы<br>недозарабатываете от <span>потери ресурса?</span></h1>
+    <p class="subtitle">7 вопросов. Реальные цифры. Вы увидите, что теряете каждый месяц — в рублях и часах.</p>
   </div>
 
   <!-- QUIZ -->
@@ -648,13 +648,13 @@
   <!-- RESULTS -->
   <div class="results" id="resultsSection">
     <div class="results-header">
-      <div class="label">Твой результат</div>
+      <div class="label">Ваш результат</div>
       <div class="results-title" id="resultsTitle"></div>
-      <div class="results-sub">Вот во что обходится твоё состояние каждый месяц</div>
+      <div class="results-sub">Вот во что обходится ваше состояние каждый месяц</div>
     </div>
 
     <div class="big-number-card">
-      <div class="big-label">Ты теряешь каждый месяц</div>
+      <div class="big-label">Вы теряете каждый месяц</div>
       <span class="big-value" id="totalLoss">0 ₽</span>
       <div class="big-period" id="yearlyLoss"></div>
     </div>
@@ -671,14 +671,14 @@
         <div class="metric-note">продуктивных часов сгорает впустую</div>
       </div>
       <div class="metric-card info">
-        <div class="metric-label">Цена 1 часа твоего времени</div>
+        <div class="metric-label">Цена 1 часа вашего времени</div>
         <div class="metric-value" id="hourCost">0 ₽</div>
-        <div class="metric-note">по твоим данным</div>
+        <div class="metric-note">по вашим данным</div>
       </div>
       <div class="metric-card warning">
         <div class="metric-label">КПД сейчас</div>
         <div class="metric-value" id="efficiency">0%</div>
-        <div class="metric-note">от твоего реального потенциала</div>
+        <div class="metric-note">от вашего реального потенциала</div>
       </div>
     </div>
 
@@ -690,7 +690,7 @@
     <div class="verdict-card" id="verdictCard"></div>
 
     <div class="cta-card">
-      <div class="cta-title">Эти деньги можно вернуть</div>
+      <div class="cta-title">Эти можно изменить</div>
       <p class="cta-text">Послушай 10-минутный эпизод «Сильные ломаются тихо» + 1 практика, которую можно применить сегодня вечером</p>
       <button class="btn-cta">СЛУШАТЬ БЕСПЛАТНО</button>
     </div>
@@ -705,7 +705,7 @@ const questions = [
   {
     id: 'revenue',
     number: '01',
-    text: 'Какая средняя выручка твоего бизнеса в месяц?',
+    text: 'Какая средняя выручка вашего бизнеса в месяц?',
     hint: 'Примерно — порядок цифры важнее точности',
     type: 'options',
     options: [
@@ -718,7 +718,7 @@ const questions = [
   {
     id: 'hours',
     number: '02',
-    text: 'Сколько часов в неделю ты реально работаешь?',
+    text: 'Сколько часов в неделю вы реально работаете?',
     hint: 'Включая вечера, выходные, "просто проверю телефон"',
     type: 'slider',
     min: 40, max: 100, default: 70,
@@ -728,8 +728,8 @@ const questions = [
   {
     id: 'sleep',
     number: '03',
-    text: 'Сколько часов ты в среднем спишь?',
-    hint: 'Честно — не "должен", а реально',
+    text: 'Сколько часов вы в среднем спите?',
+    hint: 'Честно — не "должен", а как есть на самом деле',
     type: 'slider',
     min: 3, max: 8, default: 5,
     unit: 'часов/ночь',
@@ -738,8 +738,8 @@ const questions = [
   {
     id: 'focus',
     number: '04',
-    text: 'Как ты оцениваешь свой фокус и качество решений сейчас?',
-    hint: 'Сравни с собой на пике формы',
+    text: 'Как вы оцениваете свой фокус и качество решений сейчас?',
+    hint: 'Сравни с собой на пике состояния "газую"',
     type: 'options',
     options: [
       { label: 'Работаю чётко', value: 90, opt: '~90% от пика' },
@@ -751,8 +751,8 @@ const questions = [
   {
     id: 'mistakes',
     number: '05',
-    text: 'Как часто ты принимаешь решения, о которых потом жалеешь?',
-    hint: 'Срывы на команду, неверные наймы, отложенные сделки',
+    text: 'Как часто вы принимаете решения, о которых потом жалеете?',
+    hint: 'Срывы на команду, импульсивный найм, отложенные сделки и расфокус',
     type: 'options',
     options: [
       { label: 'Редко', value: 1 },
@@ -764,8 +764,8 @@ const questions = [
   {
     id: 'delegate',
     number: '06',
-    text: 'Сколько задач ты делаешь сам, потому что "некому доверить"?',
-    hint: 'Процент от твоего рабочего времени',
+    text: 'Сколько задач вы делаете сами, потому что "некому доверить"?',
+    hint: 'Процент от вашего рабочего времени',
     type: 'slider',
     min: 10, max: 90, default: 60,
     unit: '% времени',
@@ -774,7 +774,7 @@ const questions = [
   {
     id: 'burnout',
     number: '07',
-    text: 'Как долго ты уже в этом состоянии?',
+    text: 'Как долго вы уже в этом состоянии?',
     hint: 'На износе, без нормального восстановления',
     type: 'options',
     options: [
